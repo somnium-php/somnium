@@ -1,0 +1,70 @@
+name: 'Docker Publish'
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - .github/workflows/docker-publish.yml
+            - docker/**
+    workflow_dispatch:
+
+env:
+    REGISTRY_DOMAIN: ghcr.io
+    REGISTRY_USERNAME: ${{ github.actor }}
+    REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+    REGISTRY_NAMESPACE: ${{ github.repository }}
+
+jobs:
+    publish:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: 'Checkout the repository'
+              uses: actions/checkout@v4
+
+            - name: 'Set up QEMU'
+              uses: docker/setup-qemu-action@v3
+
+            - name: 'Set up Docker Buildx'
+              uses: docker/setup-buildx-action@v3
+
+            - name: 'Log into the container registry'
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY_DOMAIN }}
+                  username: ${{ env.REGISTRY_USERNAME }}
+                  password: ${{ env.REGISTRY_PASSWORD }}
+
+            - name: 'Publish container image: nginx'
+              uses: docker/build-push-action@v5
+              with:
+                  context: docker/nginx
+                  target: release
+                  platforms: linux/amd64,linux/arm64
+                  build-args: UBUNTU_VERSION=22.04
+                  tags: ${{ env.REGISTRY_DOMAIN }}/${{ env.REGISTRY_NAMESPACE }}/nginx:r1.0
+                  push: true
+
+            - name: 'Publish container image: php'
+              uses: docker/build-push-action@v5
+              with:
+                  context: docker/php
+                  target: release
+                  platforms: linux/amd64,linux/arm64
+                  build-args: |
+                      UBUNTU_VERSION=22.04
+                      PHP_VERSION=8.3
+                  tags: ${{ env.REGISTRY_DOMAIN }}/${{ env.REGISTRY_NAMESPACE }}/php:8.3-r1.0
+                  push: true
+
+            - name: 'Publish container image: php-dev'
+              uses: docker/build-push-action@v5
+              with:
+                  context: docker/php
+                  target: develop
+                  platforms: linux/amd64,linux/arm64
+                  build-args: |
+                      UBUNTU_VERSION=22.04
+                      PHP_VERSION=8.3
+                  tags: ${{ env.REGISTRY_DOMAIN }}/${{ env.REGISTRY_NAMESPACE }}/php:8.3-r1.0-dev
+                  push: true
