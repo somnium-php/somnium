@@ -42,6 +42,7 @@ RUN \
     # Install PHP Extensions
     #---------------------------------------------------------------------------
         && apt install -y \
+            php${PHP_VERSION}-bcmath \
             php${PHP_VERSION}-cli \
             php${PHP_VERSION}-curl \
     #---------------------------------------------------------------------------
