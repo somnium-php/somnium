@@ -1,0 +1,32 @@
+{
+    "name": "somnium-php/somnium",
+    "version": "1.0.0",
+    "description": "The Somnium PHP Framework",
+    "keywords": [
+        "framework",
+        "somnium"
+    ],
+    "license": "MIT",
+    "homepage": "https://somnium-php.com",
+    "support": {
+        "issues": "https://github.com/somnium-php/somnium/issues",
+        "source": "https://github.com/somnium-php/somnium"
+    },
+    "authors": [
+        {
+            "name": "Daren Weimer",
+            "email": "darenweimer@somnium-php.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "somnium-php/framework": "^1.0"
+    },
+    "config": {
+        "optimize-autoloader": false,
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
