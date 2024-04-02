@@ -1,0 +1,24 @@
+networks:
+    default:
+        name: somnium_network
+services:
+    nginx:
+        container_name: somnium_nginx
+        image: ghcr.io/somnium-php/somnium/nginx:r1.0
+        volumes:
+            - type: bind
+              source: .
+              target: /var/www
+        depends_on:
+            - php
+        restart: unless-stopped
+    php:
+        container_name: somnium_php
+        image: ghcr.io/somnium-php/somnium/php:8.3-r1.0-dev
+        environment:
+            PHP_IDE_CONFIG: "serverName=somnium"
+        volumes:
+            - type: bind
+              source: .
+              target: /var/www
+        restart: unless-stopped
