@@ -57,7 +57,7 @@ RUN \
     # Install and Configure Task Scheduler
     #---------------------------------------------------------------------------
         && apt install -y cron \
-        && echo '* * * * * cd /var/www && php console schedule:run >> /dev/null 2>&1' | crontab -u somnium - \
+        && echo '* * * * * cd /var/www && php aspire schedule:run >> /dev/null 2>&1' | crontab -u somnium - \
     #---------------------------------------------------------------------------
     # Post-Installation Cleanup
     #---------------------------------------------------------------------------
