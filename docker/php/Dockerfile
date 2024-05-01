@@ -31,11 +31,17 @@ RUN \
     # Install and Configure PHP-FPM
     #---------------------------------------------------------------------------
         && apt install -y php${PHP_VERSION}-fpm \
-        && sed -i 's/^\(\s*user\s*=\s*\).*/\1somnium/' ${PHP_DIR}/fpm/pool.d/www.conf \
-        && sed -i 's/^\(\s*group\s*=\s*\).*/\1somnium/' ${PHP_DIR}/fpm/pool.d/www.conf \
-        && sed -i 's/^\(\s*listen\s*=\s*\).*/\10.0.0.0:9000/' ${PHP_DIR}/fpm/pool.d/www.conf \
-        && sed -i 's/^\(\s*listen\.owner\s*=\s*\).*/\1somnium/' ${PHP_DIR}/fpm/pool.d/www.conf \
-        && sed -i 's/^\(\s*listen\.group\s*=\s*\).*/\1somnium/' ${PHP_DIR}/fpm/pool.d/www.conf \
+        && sed -i 's/^\s*;*\s*\(error_log\)\s*=\s*.*/\1 = \/proc\/self\/fd\/2/' ${PHP_ETC_DIR}/fpm/php-fpm.conf \
+        && sed -i 's/^\s*;*\s*\(log_limit\)\s*=\s*.*/\1 = 8192/' ${PHP_ETC_DIR}/fpm/php-fpm.conf \
+        && sed -i 's/^\s*;*\s*\(user\)\s*=\s*.*/\1 = somnium/' ${PHP_ETC_DIR}/fpm/pool.d/www.conf \
+        && sed -i 's/^\s*;*\s*\(group\)\s*=\s*.*/\1 = somnium/' ${PHP_ETC_DIR}/fpm/pool.d/www.conf \
+        && sed -i 's/^\s*;*\s*\(listen\)\s*=\s*.*/\1 = 0.0.0.0:9000/' ${PHP_ETC_DIR}/fpm/pool.d/www.conf \
+        && sed -i 's/^\s*;*\s*\(listen\.owner\)\s*=\s*.*/\1 = somnium/' ${PHP_ETC_DIR}/fpm/pool.d/www.conf \
+        && sed -i 's/^\s*;*\s*\(listen\.group\)\s*=\s*.*/\1 = somnium/' ${PHP_ETC_DIR}/fpm/pool.d/www.conf \
+        && sed -i 's/^\s*;*\s*\(access\.log\)\s*=\s*.*/\1 = \/proc\/self\/fd\/2/' ${PHP_ETC_DIR}/fpm/pool.d/www.conf \
+        && sed -i 's/^\s*;*\s*\(catch_workers_output\)\s*=\s*.*/\1 = yes/' ${PHP_ETC_DIR}/fpm/pool.d/www.conf \
+        && sed -i 's/^\s*;*\s*\(clear_env\)\s*=\s*.*/\1 = no/' ${PHP_ETC_DIR}/fpm/pool.d/www.conf \
+        && sed -i 's/^\s*;*\s*\(decorate_workers_output\)\s*=\s*.*/\1 = no/' ${PHP_ETC_DIR}/fpm/pool.d/www.conf \
         && mkdir -p /run/php \
         && touch /run/php/php${PHP_VERSION}-fpm.sock \
     #---------------------------------------------------------------------------
