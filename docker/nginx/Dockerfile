@@ -26,13 +26,19 @@ RUN \
         && ln -sf /dev/stdout /var/log/nginx/access.log \
         && ln -sf /dev/stderr /var/log/nginx/error.log \
     #---------------------------------------------------------------------------
+    # Configure Nginx Available Sites
+    #---------------------------------------------------------------------------
+        && rm -rf /etc/nginx/sites-available/* \
+        && rm -rf /etc/nginx/sites-enabled \
+        && ln -sf /etc/nginx/sites-available /etc/nginx/sites-enabled \
+    #---------------------------------------------------------------------------
     # Post-Installation Cleanup
     #---------------------------------------------------------------------------
         && apt autoremove -y --purge \
         && apt clean \
         && rm -rf /var/lib/apt/lists/* /var/tmp/*
 
-COPY default.conf /etc/nginx/sites-available/default
+COPY sites-available/ /etc/nginx/sites-available/
 
 WORKDIR /var/www
 
