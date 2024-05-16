@@ -19,7 +19,7 @@ jobs:
             - name: 'Delete untagged container images'
               uses: actions/delete-package-versions@v5
               with:
-                  package-name: ${{ matrix.package }}
+                  package-name: ${{ github.repository }}/${{ matrix.package }}
                   package-type: container
                   min-versions-to-keep: ${{ inputs.min-versions }}
                   delete-only-untagged-versions: true
