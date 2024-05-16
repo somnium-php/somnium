@@ -3,6 +3,9 @@ name: 'Docker Cleanup: Delete Untagged Container Images'
 on:
     workflow_dispatch:
         inputs:
+            package-name:
+                description: 'The name of the package'
+                required: true
             min-versions:
                 description: 'The minimum number of versions to keep'
                 required: true
@@ -10,16 +13,11 @@ on:
 jobs:
     docker-cleanup:
         runs-on: ubuntu-22.04
-        strategy:
-            matrix:
-                package:
-                    - nginx
-                    - php
         steps:
             - name: 'Delete untagged container images'
               uses: actions/delete-package-versions@v5
               with:
-                  package-name: ${{ github.repository }}/${{ matrix.package }}
+                  package-name: ${{ inputs.package-name }}
                   package-type: container
                   min-versions-to-keep: ${{ inputs.min-versions }}
                   delete-only-untagged-versions: true
