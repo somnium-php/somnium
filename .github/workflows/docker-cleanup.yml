@@ -1,4 +1,4 @@
-name: 'Docker Cleanup: Delete Untagged Container Images'
+name: 'Docker Cleanup'
 
 on:
     workflow_dispatch:
