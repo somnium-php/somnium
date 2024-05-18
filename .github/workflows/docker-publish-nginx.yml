@@ -1,0 +1,29 @@
+name: 'Docker Publish: Nginx'
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - docker/nginx/**
+    workflow_dispatch:
+
+jobs:
+    docker-publish:
+        uses: ./.github/workflows/docker-publish.yml
+        strategy:
+            matrix:
+                target:
+                    - release
+                include:
+                    - target: release
+                      nametag: nginx:r1.0
+        with:
+            registry-namespace: ${{ github.repository }}
+            context: docker/nginx
+            target: ${{ matrix.target }}
+            build-args: UBUNTU_VERSION=22.04
+            nametag: ${{ matrix.nametag }}
+        secrets:
+            registry-username: ${{ github.actor }}
+            registry-password: ${{ secrets.GITHUB_TOKEN }}
