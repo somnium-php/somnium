@@ -45,3 +45,32 @@ WORKDIR /var/www
 EXPOSE 80/tcp
 
 CMD ["nginx", "-g", "daemon off;"]
+
+
+
+
+
+FROM release AS develop
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN \
+    #---------------------------------------------------------------------------
+    # Update System Packages
+    #---------------------------------------------------------------------------
+        apt update \
+    #---------------------------------------------------------------------------
+    # Install Development Packages
+    #---------------------------------------------------------------------------
+        && apt install -y \
+            curl \
+            dnsutils \
+            iputils-ping \
+            nano \
+            vim \
+    #---------------------------------------------------------------------------
+    # Post-Installation Cleanup
+    #---------------------------------------------------------------------------
+        && apt autoremove -y --purge \
+        && apt clean \
+        && rm -rf /var/lib/apt/lists/* /var/tmp/*
