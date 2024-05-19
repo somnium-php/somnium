@@ -15,9 +15,12 @@ jobs:
             matrix:
                 target:
                     - release
+                    - develop
                 include:
                     - target: release
                       nametag: nginx:r1.0
+                    - target: develop
+                      nametag: nginx:r1.0-dev
         with:
             registry-namespace: ${{ github.repository }}
             context: docker/nginx
