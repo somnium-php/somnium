@@ -1,4 +1,4 @@
-name: 'Docker Publish: Nginx'
+name: 'docker-publish-nginx'
 
 on:
     push:

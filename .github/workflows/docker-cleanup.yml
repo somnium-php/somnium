@@ -1,4 +1,4 @@
-name: 'Docker Cleanup'
+name: 'docker-cleanup'
 
 on:
     workflow_dispatch:
