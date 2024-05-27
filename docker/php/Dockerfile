@@ -8,6 +8,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_DIR=/etc/php/$PHP_VERSION
+ENV NON_ROOT_USER=$NON_ROOT_USER
 
 RUN \
     #---------------------------------------------------------------------------
@@ -32,17 +33,8 @@ RUN \
     # Install and Configure PHP-FPM
     #---------------------------------------------------------------------------
         && apt install -y php$PHP_VERSION-fpm \
-        && sed -i "s/^\s*;*\s*\(error_log\)\s*=\s*.*/\1 = \/proc\/self\/fd\/2/" $PHP_DIR/fpm/php-fpm.conf \
-        && sed -i "s/^\s*;*\s*\(log_limit\)\s*=\s*.*/\1 = 8192/" $PHP_DIR/fpm/php-fpm.conf \
-        && sed -i "s/^\s*;*\s*\(user\)\s*=\s*.*/\1 = $NON_ROOT_USER/" $PHP_DIR/fpm/pool.d/www.conf \
-        && sed -i "s/^\s*;*\s*\(group\)\s*=\s*.*/\1 = $NON_ROOT_USER/" $PHP_DIR/fpm/pool.d/www.conf \
-        && sed -i "s/^\s*;*\s*\(listen\)\s*=\s*.*/\1 = 0.0.0.0:9000/" $PHP_DIR/fpm/pool.d/www.conf \
-        && sed -i "s/^\s*;*\s*\(listen\.owner\)\s*=\s*.*/\1 = $NON_ROOT_USER/" $PHP_DIR/fpm/pool.d/www.conf \
-        && sed -i "s/^\s*;*\s*\(listen\.group\)\s*=\s*.*/\1 = $NON_ROOT_USER/" $PHP_DIR/fpm/pool.d/www.conf \
-        && sed -i "s/^\s*;*\s*\(access\.log\)\s*=\s*.*/\1 = \/proc\/self\/fd\/2/" $PHP_DIR/fpm/pool.d/www.conf \
-        && sed -i "s/^\s*;*\s*\(catch_workers_output\)\s*=\s*.*/\1 = yes/" $PHP_DIR/fpm/pool.d/www.conf \
-        && sed -i "s/^\s*;*\s*\(clear_env\)\s*=\s*.*/\1 = no/" $PHP_DIR/fpm/pool.d/www.conf \
-        && sed -i "s/^\s*;*\s*\(decorate_workers_output\)\s*=\s*.*/\1 = no/" $PHP_DIR/fpm/pool.d/www.conf \
+        && sed -i "s/^\(\s*\);*\s*\(error_log\)\s*=\s*.*/\1\2 = \/proc\/1\/fd\/2/" $PHP_DIR/fpm/php-fpm.conf \
+        && sed -i "s/^\(\s*\);*\s*\(log_limit\)\s*=\s*.*/\1\2 = 16384/" $PHP_DIR/fpm/php-fpm.conf \
         && mkdir -p /run/php \
         && touch /run/php/php$PHP_VERSION-fpm.sock \
     #---------------------------------------------------------------------------
@@ -74,6 +66,8 @@ RUN \
 
 COPY php-custom.ini $PHP_DIR/cli/conf.d/
 COPY php-custom.ini $PHP_DIR/fpm/conf.d/
+
+COPY pool.d/ $PHP_DIR/fpm/pool.d/
 
 WORKDIR /var/www
 
