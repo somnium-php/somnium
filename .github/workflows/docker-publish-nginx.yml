@@ -11,22 +11,15 @@ on:
 jobs:
     docker-publish:
         uses: ./.github/workflows/docker-publish.yml
-        strategy:
-            matrix:
-                target:
-                    - release
-                    - develop
-                include:
-                    - target: release
-                      nametag: nginx:r1.0
-                    - target: develop
-                      nametag: nginx:r1.0-dev
         with:
             registry-namespace: ${{ github.repository }}
             context: docker/nginx
-            target: ${{ matrix.target }}
+            targets: |
+                [
+                    "{'target':'release', 'tag':'nginx:r1.0'}",
+                    "{'target':'develop', 'tag':'nginx:r1.0-dev'}"
+                ]
             build-args: UBUNTU_VERSION=22.04
-            nametag: ${{ matrix.nametag }}
         secrets:
             registry-username: ${{ github.actor }}
             registry-password: ${{ secrets.GITHUB_TOKEN }}

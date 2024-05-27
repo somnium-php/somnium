@@ -11,24 +11,17 @@ on:
 jobs:
     docker-publish:
         uses: ./.github/workflows/docker-publish.yml
-        strategy:
-            matrix:
-                target:
-                    - release
-                    - develop
-                include:
-                    - target: release
-                      nametag: php:8.3-r1.0
-                    - target: develop
-                      nametag: php:8.3-r1.0-dev
         with:
             registry-namespace: ${{ github.repository }}
             context: docker/php
-            target: ${{ matrix.target }}
+            targets: |
+                [
+                    "{'target':'release', 'tag':'php:8.3-r1.0'}",
+                    "{'target':'develop', 'tag':'php:8.3-r1.0-dev'}"
+                ]
             build-args: |
                 UBUNTU_VERSION=22.04
                 PHP_VERSION=8.3
-            nametag: ${{ matrix.nametag }}
         secrets:
             registry-username: ${{ github.actor }}
             registry-password: ${{ secrets.GITHUB_TOKEN }}

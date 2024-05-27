@@ -16,9 +16,9 @@ on:
                 type: string
                 description: 'The path to the Dockerfile'
                 required: true
-            target:
+            targets:
                 type: string
-                description: 'The target Dockerfile layer'
+                description: 'The target Dockerfile layers and tags (JSON)'
                 required: true
             platforms:
                 type: string
@@ -29,10 +29,6 @@ on:
                 type: string
                 description: 'Any build args to pass to the Docker builder'
                 required: false
-            nametag:
-                type: string
-                description: 'The container image name:tag'
-                required: true
         secrets:
             registry-username:
                 description: 'The container registry username'
@@ -44,6 +40,10 @@ on:
 jobs:
     docker-publish:
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                target: ${{ fromJSON(inputs.targets) }}
+            max-parallel: 1
         steps:
             - name: 'Check out the repository'
               uses: actions/checkout@v4
@@ -61,8 +61,10 @@ jobs:
               uses: docker/build-push-action@v5
               with:
                   context: ${{ inputs.context }}
-                  target: ${{ inputs.target }}
+                  target: ${{ fromJSON(matrix.target).target }}
                   platforms: ${{ inputs.platforms }}
                   build-args: ${{ inputs.build-args }}
-                  tags: ${{ inputs.registry-domain }}/${{ inputs.registry-namespace }}/${{ inputs.nametag }}
+                  tags: ${{ inputs.registry-domain }}/${{ inputs.registry-namespace }}/${{ fromJSON(matrix.target).tag }}
                   push: true
+                  cache-from: type=gha,scope=${{ github.workflow }}
+                  cache-to: type=gha,mode=max,scope=${{ github.workflow }}
