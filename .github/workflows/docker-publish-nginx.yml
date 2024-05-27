@@ -25,7 +25,7 @@ jobs:
             registry-namespace: ${{ github.repository }}
             context: docker/nginx
             target: ${{ matrix.target }}
-            build-args: UBUNTU_VERSION=22.04
+            build-args: UBUNTU_VERSION=24.04
             nametag: ${{ matrix.nametag }}
         secrets:
             registry-username: ${{ github.actor }}

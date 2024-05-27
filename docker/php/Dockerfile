@@ -17,8 +17,9 @@ RUN \
         apt update \
         && apt upgrade -y \
     #---------------------------------------------------------------------------
-    # Add Default User/Group
+    # Add Non-Root User/Group
     #---------------------------------------------------------------------------
+        && id -un 1000 | xargs -r userdel -frRZ \
         && groupadd -g 1000 $NON_ROOT_USER \
         && useradd -u 1000 -g 1000 -m $NON_ROOT_USER -s /bin/bash \
         && usermod -L $NON_ROOT_USER \

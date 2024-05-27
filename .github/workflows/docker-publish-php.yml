@@ -26,7 +26,7 @@ jobs:
             context: docker/php
             target: ${{ matrix.target }}
             build-args: |
-                UBUNTU_VERSION=22.04
+                UBUNTU_VERSION=24.04
                 PHP_VERSION=8.3
             nametag: ${{ matrix.nametag }}
         secrets:
