@@ -1,4 +1,4 @@
-name: 'docker-publish'
+name: 'Docker Publish'
 
 on:
     workflow_call:
@@ -66,5 +66,5 @@ jobs:
                   build-args: ${{ inputs.build-args }}
                   tags: ${{ inputs.registry-domain }}/${{ inputs.registry-namespace }}/${{ fromJSON(matrix.target).tag }}
                   push: true
-                  cache-from: type=gha,scope=${{ github.workflow }}
-                  cache-to: type=gha,mode=max,scope=${{ github.workflow }}
+                  cache-from: type=gha,scope=${{ github.run_id }}
+                  cache-to: type=gha,mode=max,scope=${{ github.run_id }}
