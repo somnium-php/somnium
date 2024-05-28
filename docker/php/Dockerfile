@@ -34,7 +34,7 @@ RUN \
     # Install and Configure PHP-FPM
     #---------------------------------------------------------------------------
         && apt install -y php$PHP_VERSION-fpm \
-        && sed -i "s/^\(\s*\);*\s*\(error_log\)\s*=\s*.*/\1\2 = \/proc\/1\/fd\/2/" $PHP_DIR/fpm/php-fpm.conf \
+        && sed -i "s/^\(\s*\);*\s*\(error_log\)\s*=\s*.*/\1\2 = \/dev\/stderr/" $PHP_DIR/fpm/php-fpm.conf \
         && sed -i "s/^\(\s*\);*\s*\(log_limit\)\s*=\s*.*/\1\2 = 16384/" $PHP_DIR/fpm/php-fpm.conf \
         && mkdir -p /run/php \
         && touch /run/php/php$PHP_VERSION-fpm.sock \
